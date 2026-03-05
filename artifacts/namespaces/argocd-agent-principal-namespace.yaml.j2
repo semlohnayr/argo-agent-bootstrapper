@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   annotations:
-    openshift.io/display-name: ArgoCD Agent Hub
+    openshift.io/display-name: ArgoCD Agent {{ ocp_cluster_name }}
   labels:
     openshift.io/cluster-monitoring: 'true'
   name: argocd

@@ -1,0 +1,17 @@
+---
+- name: Apply argocd-agent-principal resources from a directory
+  block:
+    - name: Enumerate all .yml and .yaml files in the directory
+      ansible.builtin.find:
+        paths: "../artifacts/argocd-agent-principal"
+        patterns: "*.yml.j2,*.yaml.j2,.yml,.yaml"
+        recurse: no
+      register: argocd_agent_principal
+
+    - name: Create the Resouces in the cluster
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('template', item.path) | from_yaml }}"
+      loop: "{{ argocd_agent_principal.files }}"
+      loop_control:
+        label: "{{ item.path | basename }}"

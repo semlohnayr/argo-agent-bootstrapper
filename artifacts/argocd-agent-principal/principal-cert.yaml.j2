@@ -1,10 +1,11 @@
+---
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: argocd-agent-principal-tls
 spec:
   dnsNames:
-  - argocd-agent-principal-argocd.apps.ocp-sno.lab.home
+  - argocd-agent-principal-argocd.apps.{{ ocp_base_domain }}
   issuerRef:
     name: argocd-agent-ca
     kind: Issuer
@@ -12,4 +13,4 @@ spec:
   secretName: argocd-agent-principal-tls
   subject:
     organizationalUnits:
-      - ocp-sno.lab.home
+      - {{ ocp_base_domain }}
