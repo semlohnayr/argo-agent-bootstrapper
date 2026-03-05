@@ -15,3 +15,4 @@
       loop: "{{ manifest_files.files }}"
       loop_control:
         label: "{{ item.path | basename }}"
+  
