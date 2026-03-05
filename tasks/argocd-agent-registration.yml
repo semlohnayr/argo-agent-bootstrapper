@@ -1,0 +1,12 @@
+---
+- name: Retrieve the ArgoCD Principal Hub secret
+  kubernetes.core.k8s_info:
+    kind: Secret
+    name: argocd-principal-hub
+    namespace: argocd
+  register: hub_secret_output
+
+- name: Set secret data as a fact for easy access
+  ansible.builtin.set_fact:
+    hub_secret: "{{ hub_secret_output.resources[0] }}"
+  when: hub_secret_output.resources | length > 0
