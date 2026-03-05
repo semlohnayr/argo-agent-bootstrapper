@@ -4,10 +4,11 @@
     operator_list:
       - gitops
       - cert-manager
+      - argocd-agent-principal-namespace
 
 - name: Create List of Subscriptions
   ansible.builtin.set_fact:
-    subscription_list: "{{ operator_list | map('regex_replace', '^(.*)$', '../artifacts/subscriptions/\\1.yml') | list }}"
+    subscription_list: "{{ operator_list | map('regex_replace', '^(.*)$', 'artifacts/subscriptions/\\1.yml') | list }}"
 
 - name: Install Operators
   kubernetes.core.k8s:

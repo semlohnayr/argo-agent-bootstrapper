@@ -15,8 +15,8 @@
   block:
     - name: Enumerate all .yml and .yaml files in the directory
       ansible.builtin.find:
-        paths: "../artifacts/argocd-agent-registration"
-        patterns: "*.yml.j2,*.yaml.j2,.yml,.yaml"
+        paths: "artifacts/argocd-agent-registration"
+        patterns: ["*.yml.j2","*.yaml.j2","*.yml","*.yaml"]
         recurse: no
       register: argocd_agent_registration
 
