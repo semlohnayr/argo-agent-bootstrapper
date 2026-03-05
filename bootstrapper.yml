@@ -9,21 +9,26 @@
 
   module_defaults:
     kubernetes.core.k8s:
-      validate_certs: true
+      validate_certs: false
       host: "{{ ocp_api }}"
       username: "{{ ocp_user }}"
       password: "{{ ocp_pass }}"
-      token: "{{ ocp_token | default(omit) }}"
+      api_key: "{{ ocp_token | default(omit) }}"
+
 
   tasks:
     - name: Include Namespace Creation tasks
       ansible.builtin.include_tasks:
         file: tasks/namespace.yml
 
-    - name: Include Operator Installation tasks
-      ansible.builtin.include_tasks:
-        file: tasks/operator.yml
+#    - name: Include Operator Installation tasks
+#      ansible.builtin.include_tasks:
+#        file: tasks/operator.yml
 
-    - name: Include ArgoCD Agent Installation tasks
-      ansible.builtin.include_tasks:
-        file: tasks/argocd-agent-principal.yml
+#    - name: Include ArgoCD Agent Installation tasks
+#      ansible.builtin.include_tasks:
+#        file: tasks/argocd-agent-principal.yml
+
+#    - name: Include ArgoCD Agent Registration tasks
+#      ansible.builtin.include_tasks:
+#        file: tasks/argocd-agent-registration.yml

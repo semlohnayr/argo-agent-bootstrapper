@@ -3,11 +3,11 @@
   block:
     - name: Enumerate all .yml and .yaml files in the namespaces directory
       ansible.builtin.find:
-        paths: "../artifacts/namespaces"
-        patterns: "*.yml.j2,*.yaml.j2,.yml,.yaml"
+        paths: "artifacts/namespaces"
+        patterns: ["*.yml.j2","*.yaml.j2","*.yml","*.yaml"]
         recurse: no
       register: manifest_files
-
+    - debug: var=manifest_files
     - name: Create the Namespaces in the cluster
       kubernetes.core.k8s:
         state: present
