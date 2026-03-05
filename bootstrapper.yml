@@ -1,0 +1,25 @@
+---
+- name: Bootstrap ArgoCD Agent
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - vars/vars.yml
+
+  module_defaults:
+    kubernetes.core.k8s:
+      validate_certs: true
+      host: "{{ ocp_api }}"
+      username: "{{ ocp_user }}"
+      password: "{{ ocp_pass }}"
+      token: "{{ ocp_token | default(omit) }}"
+
+  tasks:
+    - name: Include Namespace Creation tasks
+      ansible.builtin.include_tasks:
+        file: tasks/namespace.yml
+
+    - name: Include Operator Installation tasks
+      ansible.builtin.include_tasks:
+        file: tasks/operator.yml

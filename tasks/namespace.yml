@@ -1,0 +1,17 @@
+---
+- name: Apply Kubernetes manifests from a directory
+  block:
+    - name: Enumerate all .yml and .yaml files in the namespaces directory
+      ansible.builtin.find:
+        paths: "../artifacts/namespaces"
+        patterns: "*.yml,*.yaml"
+        recurse: no
+      register: manifest_files
+
+    - name: Create the namespaces in the cluster
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ item.path }}"
+      loop: "{{ manifest_files.files }}"
+      loop_control:
+        label: "{{ item.path | basename }}"

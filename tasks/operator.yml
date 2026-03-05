@@ -1,0 +1,55 @@
+---
+- name: Create List of Operators
+  ansible.builtin.set_fact:
+    operator_list:
+      - gitops
+      - cert-manager
+
+- name: Create List of Subscriptions
+  ansible.builtin.set_fact:
+    subscription_list: "{{ operator_list | map('regex_replace', '^(.*)$', '../artifacts/subscriptions/\\1.yml') | list }}"
+
+- name: Install Operators
+  kubernetes.core.k8s:
+    state: present
+    src: {{ item }}
+  loop: "{{ subscription_list }}"
+
+- name: Read subscription manifests
+  ansible.builtin.slurp:
+    src: "{{ item }}"
+  loop: "{{ subscription_list}}"
+  register: manifest_contents
+
+- name: Parse subscription details
+  ansible.builtin.set_fact:
+    subscriptions: "{{ subscriptions | default([]) + [item.content | b64decode | from_yaml] }}"
+  loop: "{{ manifest_contents.results }}"
+
+- name: Wait for subscriptions to have a CSV assigned
+  kubernetes.core.k8s_info:
+    api_version: operators.coreos.com/v1alpha1
+    kind: Subscription
+    name: "{{ item.metadata.name }}"
+    namespace: "{{ item.metadata.namespace }}"
+  loop: "{{ subscriptions }}"
+  register: sub_status
+  until: >-
+    sub_status.resources | length > 0 and
+    sub_status.resources[0].status.currentCSV is defined
+  retries: 20
+  delay: 10
+
+- name: Wait for CSVs to succeed
+  kubernetes.core.k8s_info:
+    api_version: operators.coreos.com/v1alpha1
+    kind: ClusterServiceVersion
+    name: "{{ item.resources[0].status.currentCSV }}"
+    namespace: "{{ item.resources[0].metadata.namespace }}"
+  loop: "{{ sub_status.results }}"
+  register: csv_status
+  until: >-
+    csv_status.resources | length > 0 and
+    csv_status.resources[0].status.phase == 'Succeeded'
+  retries: 30
+  delay: 20
