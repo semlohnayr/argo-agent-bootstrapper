@@ -2,7 +2,7 @@
 - name: Retrieve the ArgoCD Principal Hub secret
   kubernetes.core.k8s_info:
     kind: Secret
-    name: argocd-principal-hub
+    name: argocd-principal-{{ ocp_cluster_name }}
     namespace: argocd
   register: hub_secret_output
 
@@ -10,3 +10,20 @@
   ansible.builtin.set_fact:
     hub_secret: "{{ hub_secret_output.resources[0] }}"
   when: hub_secret_output.resources | length > 0
+
+- name: Apply argocd-agent-registration resources from a directory
+  block:
+    - name: Enumerate all .yml and .yaml files in the directory
+      ansible.builtin.find:
+        paths: "../artifacts/argocd-agent-registration"
+        patterns: "*.yml.j2,*.yaml.j2,.yml,.yaml"
+        recurse: no
+      register: argocd_agent_registration
+
+    - name: Create the Resouces in the cluster
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('template', item.path) | from_yaml }}"
+      loop: "{{ argocd_agent_registration.files }}"
+      loop_control:
+        label: "{{ item.path | basename }}"
