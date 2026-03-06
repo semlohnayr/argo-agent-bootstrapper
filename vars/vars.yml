@@ -1,6 +1,4 @@
 ---
 ocp_api:
-ocp_user:
-ocp_pass:
 ocp_cluster_name:
 ocp_base_domain:
