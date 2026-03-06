@@ -48,7 +48,7 @@ spec:
       - customization:
           jsonPointers:
             - /data
-        kind: Secret      
+        kind: Secret
   resourceCustomizations: |
     argoproj.io/Application:
       health.lua: |
@@ -267,7 +267,7 @@ spec:
         name: policy-generator-install
         volumeMounts:
           - mountPath: /policy-generator-tmp
-            name: policy-generator    
+            name: policy-generator
     sidecarContainers:
       - name: setenv-plugin
         command: [/var/run/argocd/argocd-cmp-server]

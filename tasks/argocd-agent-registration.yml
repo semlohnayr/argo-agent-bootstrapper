@@ -1,5 +1,5 @@
 ---
-- name: Create argocd-agent-cluster-secret 
+- name: Create argocd-agent-cluster-secret
   kubernetes.core.k8s:
     state: present
     definition: "{{ lookup('template', 'artifacts/argocd-agent-registration/argocd-principal-certificate.yaml.j2') | from_yaml }}"
@@ -21,10 +21,10 @@
     - name: Enumerate all .yml and .yaml files in the directory
       ansible.builtin.find:
         paths: "artifacts/argocd-agent-registration"
-        patterns: ["*.yml.j2","*.yaml.j2","*.yml","*.yaml"]
+        patterns: ["*.yml.j2", "*.yaml.j2", "*.yml", "*.yaml"]
         excludes:
           - "argocd-principal-certificate.yaml.j2"
-        recurse: no
+        recurse: false
       register: argocd_agent_registration
 
     - name: Create the Resouces in the cluster

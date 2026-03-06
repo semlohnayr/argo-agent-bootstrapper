@@ -4,8 +4,8 @@
     - name: Enumerate all .yml and .yaml files in the directory
       ansible.builtin.find:
         paths: "artifacts/argocd-agent-principal"
-        patterns: ["*.yml.j2","*.yaml.j2","*.yml","*.yaml"]
-        recurse: no
+        patterns: ["*.yml.j2", "*.yaml.j2", "*.yml", "*.yaml"]
+        recurse: false
       register: argocd_agent_principal
 
     - name: Create the Resouces in the cluster

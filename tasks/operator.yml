@@ -18,7 +18,7 @@
 - name: Read subscription manifests
   ansible.builtin.slurp:
     src: "{{ item }}"
-  loop: "{{ subscription_list}}"
+  loop: "{{ subscription_list }}"
   register: manifest_contents
 
 - name: Parse subscription details

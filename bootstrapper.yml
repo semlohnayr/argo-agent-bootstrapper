@@ -11,6 +11,7 @@
     group/kubernetes.core.k8s:
       validate_certs: false
       host: "{{ ocp_api }}"
+      api_key: "{{ ocp_token | default(omit) }}"
 
   tasks:
     - name: Include Namespace Creation tasks
