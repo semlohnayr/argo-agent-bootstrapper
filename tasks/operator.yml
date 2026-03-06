@@ -4,7 +4,6 @@
     operator_list:
       - gitops
       - cert-manager
-      - argocd-agent-principal-namespace
 
 - name: Create List of Subscriptions
   ansible.builtin.set_fact:
@@ -35,9 +34,7 @@
     namespace: "{{ item.metadata.namespace }}"
   loop: "{{ subscriptions }}"
   register: sub_status
-  until: >-
-    sub_status.resources | length > 0 and
-    sub_status.resources[0].status.currentCSV is defined
+  until: sub_status.resources[0].status.currentCSV is defined
   retries: 20
   delay: 10
 
@@ -49,8 +46,8 @@
     namespace: "{{ item.resources[0].metadata.namespace }}"
   loop: "{{ sub_status.results }}"
   register: csv_status
-  until: >-
-    csv_status.resources | length > 0 and
-    csv_status.resources[0].status.phase == 'Succeeded'
+  until:
+    - csv_status.resources | length > 0
+    - csv_status.resources[0].status.phase == 'Succeeded'
   retries: 30
   delay: 20

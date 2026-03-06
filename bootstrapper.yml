@@ -21,6 +21,10 @@
       ansible.builtin.include_tasks:
         file: tasks/namespace.yml
 
+    - name: Include OperatorGroup creation tasks
+      ansible.builtin.include_tasks:
+        file: tasks/operatorgroup.yml
+
     - name: Include Operator Installation tasks
       ansible.builtin.include_tasks:
         file: tasks/operator.yml

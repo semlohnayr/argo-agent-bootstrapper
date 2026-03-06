@@ -3,6 +3,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: argocd-agent-principal-tls
+  namespace: argocd
 spec:
   dnsNames:
   - argocd-agent-principal-argocd.apps.{{ ocp_base_domain }}

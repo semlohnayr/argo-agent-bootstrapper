@@ -1,14 +1,14 @@
 ---
-- name: Apply Namespaces from a directory
+- name: Apply OperatorGroups from a directory
   block:
-    - name: Enumerate all .yml and .yaml files in the namespaces directory
+    - name: Enumerate all .yml and .yaml files in the operatorgroups directory
       ansible.builtin.find:
-        paths: "artifacts/namespaces"
+        paths: "artifacts/operatorgroups"
         patterns: ["*.yml.j2","*.yaml.j2","*.yml","*.yaml"]
         recurse: no
       register: manifest_files
 
-    - name: Create the Namespaces in the cluster
+    - name: Create the OperatorGroups in the cluster
       kubernetes.core.k8s:
         state: present
         definition: "{{ lookup('template', item.path) | from_yaml }}"
